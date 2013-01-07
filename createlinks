@@ -3,14 +3,14 @@
 use esmith::Build::CreateLinks  qw(:all);
 
 #--------------------------------------------------
-# actions for nethserver-mysqld-update event
+# actions for nethserver-mysql-update event
 #--------------------------------------------------
 
-my $event = "nethserver-mysqld-update";
+my $event = "nethserver-mysql-update";
 
 event_actions($event,
               'initialize-default-databases' => '00',
-              'nethserver-mysqld-conf' => '02',
+              'nethserver-mysql-conf' => '02',
               'firewall-adjust' => '30',
               'runlevel-adjust' => '40');
 templates2events("/etc/my.cnf",  $event);
@@ -19,10 +19,10 @@ event_services($event, 'mysqld' => 'restart');
 
 
 #--------------------------------------------------
-# actions for nethserver-mysqld-save event
+# actions for nethserver-mysql-save event
 #--------------------------------------------------
 
-$event = "nethserver-mysqld-save";
+$event = "nethserver-mysql-save";
 
 templates2events("/etc/my.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
@@ -30,10 +30,10 @@ event_services($event, 'mysqld' => 'restart');
 
 
 #--------------------------------------------------
-# actions for nethserver-mysqld-uninstall event
+# actions for nethserver-mysql-uninstall event
 #--------------------------------------------------
 
-$event = "nethserver-mysqld-uninstall";
+$event = "nethserver-mysql-uninstall";
 
 event_actions($event,
               'nethserver-mysqld-uninstall' => '02',
