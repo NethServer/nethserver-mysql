@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+
+use esmith::Build::CreateLinks  qw(:all);
+
+#--------------------------------------------------
+# actions for nethserver-mysqld-update event
+#--------------------------------------------------
+
+my $event = "nethserver-mysqld-update";
+
+event_actions($event,
+              'initialize-default-databases' => '00',
+              'nethserver-mysqld-conf' => '02',
+              'firewall-adjust' => '30',
+              'runlevel-adjust' => '40');
+templates2events("/etc/my.cnf",  $event);
+templates2events("/root/.my.cnf",  $event);
+event_services($event, 'mysqld' => 'restart');
+
+
+#--------------------------------------------------
+# actions for nethserver-mysqld-save event
+#--------------------------------------------------
+
+$event = "nethserver-mysqld-save";
+
+templates2events("/etc/my.cnf",  $event);
+templates2events("/root/.my.cnf",  $event);
+event_services($event, 'mysqld' => 'restart');
+
+
+#--------------------------------------------------
+# actions for nethserver-mysqld-uninstall event
+#--------------------------------------------------
+
+$event = "nethserver-mysqld-uninstall";
+
+event_actions($event,
+              'nethserver-mysqld-uninstall' => '02',
+              'firewall-adjust' => '40',
+              'runlevel-adjust' => '50');
+
+
+exit;
+

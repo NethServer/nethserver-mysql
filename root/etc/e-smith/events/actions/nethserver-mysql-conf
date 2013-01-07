@@ -1,0 +1,90 @@
+#!/usr/bin/perl
+#
+# Copyright (C) 2012 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use strict;
+use NethServer::Service;
+use esmith:util;
+use Expect;
+
+NethServer::Service::manage_add('nethserver-mysql', 'mysqld');
+
+
+# initialize mysql installation
+
+my $command = "/usr/bin/mysql_secure_installation";
+my $timeout = 5;
+my $passwd_file = "/etc/my.pwd";
+my $password = esmith::util::genRandomPassword($passwd_file);
+
+
+# start mysql if needed
+my $running = system("/sbin/service mysqld status") == 0;
+if ( $running != 1 ) {
+    system("/sbin/service mysqld start");
+}
+
+my $exp = new Expect;
+$exp->raw_pty(1);  
+$exp->spawn($command)
+    or die "Cannot spawn $command: $!\n";
+
+$exp->expect($timeout,
+    [ qr/Enter current password for root \(enter for none\):\s*/ => sub { my $exp = shift;
+                          $exp->send("\n");
+                          exp_continue; } ],
+
+    [ qr/Set root password\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
+
+    [ qr/New password:/ => sub { my $exp = shift;
+                          $exp->send("$password\n");
+                          exp_continue; } ],
+
+    [ qr/Re-enter new password:/ => sub { my $exp = shift;
+                          $exp->send("$password\n");
+                          exp_continue; } ],
+
+    [ qr/Remove anonymous users\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
+
+    [ qr/Disallow root login remotely\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
+    [ qr/Remove test database and access to it\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
+
+    [ qr/Reload privilege tables now\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
+
+);
+
+$exp->soft_close();
+
+# stop mysql if not previous running
+if ( $running != 1 ) {
+    system("/sbin/service mysqld stop");
+}
+
+

@@ -1,0 +1,49 @@
+Summary: NethServer MySQL configuration and templates.
+Name: nethserver-mysql
+Version: @@VERSION@@
+Release: @@RELEASE@@%{?dist}
+License: GPL
+Group: Networking/Daemons
+Source: %{name}-%{version}.tar.gz
+BuildArch: noarch
+Requires: mysql-server
+Requires: nethserver-base
+BuildRequires: nethserver-devtools
+AutoReq: no
+
+
+%description
+This package adds necessary startup and configuration items for
+mysql.
+
+%prep
+%setup
+
+%build
+mkdir -p root/etc/e-smith/sql/init
+perl createlinks
+
+%install
+rm -rf $RPM_BUILD_ROOT
+(cd root   ; find . -depth -print | cpio -dump $RPM_BUILD_ROOT)
+/sbin/e-smith/genfilelist $RPM_BUILD_ROOT \
+    > %{name}-%{version}-filelist
+echo "%doc COPYING"          >> %{name}-%{version}-filelist
+
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+
+%preun
+source /etc/nethserver/rpm_hook_functions
+signal_event  %{name}-uninstall $1
+
+%post
+source /etc/nethserver/rpm_hook_functions
+event_queue add %{name}-update
+
+
+%files -f %{name}-%{version}-filelist
+%defattr(-,root,root)
+
+%changelog
