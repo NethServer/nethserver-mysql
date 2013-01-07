@@ -21,7 +21,7 @@
 
 use strict;
 use NethServer::Service;
-use esmith:util;
+use esmith::util;
 use Expect;
 
 NethServer::Service::manage_add('nethserver-mysql', 'mysqld');
