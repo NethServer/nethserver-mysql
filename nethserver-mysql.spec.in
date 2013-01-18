@@ -48,3 +48,6 @@ event_queue add %{name}-update
 %defattr(-,root,root)
 
 %changelog
+* Fri Jan 18 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.0-1
+- First release
+
