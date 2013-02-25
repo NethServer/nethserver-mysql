@@ -36,7 +36,7 @@ event_services($event, 'mysqld' => 'restart');
 $event = "nethserver-mysql-uninstall";
 
 event_actions($event,
-              'nethserver-mysqld-uninstall' => '02',
+              'nethserver-mysql-uninstall' => '02',
               'firewall-adjust' => '40',
               'runlevel-adjust' => '50');
 
