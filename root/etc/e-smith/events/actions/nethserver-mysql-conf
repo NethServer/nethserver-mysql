@@ -34,6 +34,9 @@ my $timeout = 5;
 my $passwd_file = "/etc/my.pwd";
 my $password = esmith::util::genRandomPassword($passwd_file);
 
+if ( -f "/var/lib/mysql/mysql/user.frm" ) {
+   exit(0);
+}
 
 # start mysql if needed
 my $running = system("/sbin/service mysqld status") == 0;
