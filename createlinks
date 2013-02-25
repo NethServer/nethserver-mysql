@@ -42,6 +42,14 @@ event_actions($event,
 
 
 #--------------------------------------------------
+# actions for migration-import event
+#--------------------------------------------------
+
+$event = "migration-import";
+event_actions($event, 'nethserver-mysql-migrate' => 50);
+
+
+#--------------------------------------------------
 # actions for pre-backup-data event
 #--------------------------------------------------
 
