@@ -62,6 +62,6 @@ done
 
 # restore grants including root password
 /usr/bin/mysql_upgrade >/dev/null
-sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' /tmp/root/.my.cnf > /etc/my.pwd
+sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /etc/my.pwd
 
 /sbin/e-smith/signal-event nethserver-mysql-save
