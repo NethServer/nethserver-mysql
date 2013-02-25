@@ -61,9 +61,9 @@ event_actions($event, 'mysql-delete-dumped-tables' => 50);
 #--------------------------------------------------
 
 $event = "post-restore-data";
-event_actions($event, 'mysql-load-tables' => 50);
+event_actions($event, 
+                     'mysql-load-tables' => 50,
+                     'mysql-delete-dumped-tables' => 60);
+
 
 exit;
-
-exit;
-
