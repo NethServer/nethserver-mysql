@@ -1,0 +1,16 @@
+#!/bin/sh
+
+backup_dir=/var/nethserver/backup/mysql/
+
+
+status=$(/sbin/e-smith/config getprop mysqld status)
+if [ "$status" = "disabled" ]
+then
+    echo "mysqld is disabled - no tables restored" >&2
+    exit 0
+fi
+
+for db in $(ls $backup_dir/*.dump 2> /dev/null)
+do
+    mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
+done

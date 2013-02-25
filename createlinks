@@ -41,5 +41,29 @@ event_actions($event,
               'runlevel-adjust' => '50');
 
 
+#--------------------------------------------------
+# actions for pre-backup-data event
+#--------------------------------------------------
+
+$event = "pre-backup-data";
+event_actions($event, 'mysql-dump-tables' => 50);
+
+
+#--------------------------------------------------
+# actions for post-backup-data event
+#--------------------------------------------------
+
+$event = "post-backup-data";
+event_actions($event, 'mysql-delete-dumped-tables' => 50);
+
+#--------------------------------------------------
+# actions for post-restore-data event
+#--------------------------------------------------
+
+$event = "post-restore-data";
+event_actions($event, 'mysql-load-tables' => 50);
+
+exit;
+
 exit;
 

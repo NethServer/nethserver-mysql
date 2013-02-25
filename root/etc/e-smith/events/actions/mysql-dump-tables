@@ -1,0 +1,17 @@
+#!/bin/sh
+
+backup_dir=/var/nethserver/backup/mysql/
+if [ ! -d $backup_dir ]; then
+    mkdir -p $backup_dir
+fi
+
+status=$(/sbin/e-smith/config getprop mysqld status)
+if [ "$status" = "disabled" ]
+then
+    echo "mysqld is disabled - no tables dumped" >&2
+    exit 0
+fi
+for db in $(mysql -BNre "show databases;")
+do
+    mysqldump --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
+done
