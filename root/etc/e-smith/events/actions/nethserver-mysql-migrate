@@ -1,0 +1,67 @@
+#!/bin/sh
+
+#
+# Copyright (C) 2013 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+event=$1
+sourceDir=$2
+mysqlDumpDir='/home/e-smith/db/mysql'
+mysqlPassFile='/root/.my.cnf'
+
+if [ ! -d $sourceDir ] || [ "x$sourceDir" == "x" ]; then
+    echo "Could not find dir: $sourceDir";
+    exit 1
+fi
+
+mysqlDumpDir="$sourceDir/$mysqlDumpDir"
+
+if [ ! -d "$mysqlDumpDir" ]; then
+    echo "Could not find MySQL dump dir: $mysqlDumpDir";
+    exit 1
+fi
+
+mysqlPassFile="$sourceDir/$mysqlPassFile"
+if [ ! -f "$mysqlPassFile" ]; then
+    echo "Could not find MySQL password file: $mysqlPassFile";
+    exit 1
+fi
+
+status=$(/sbin/e-smith/config getprop mysqld status)
+if [ "$status" = "disabled" ]
+then
+    echo "mysqld is disabled - no tables restored" >&2
+    exit 0
+fi
+
+/usr/bin/mysql -e "drop database mysql";
+
+# restore all dumps, no matter if mysql is alreay configured
+for db in $(ls $mysqlDumpDir/*.dump 2> /dev/null)
+do
+    mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
+done
+
+/etc/init.d/mysql.init start
+
+# restore grants including root password
+/usr/bin/mysql_upgrade >/dev/null
+sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' /tmp/root/.my.cnf > /etc/my.pwd
+
+/sbin/e-smith/signal-event nethserver-mysql-save
