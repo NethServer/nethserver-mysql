@@ -2,7 +2,6 @@
 
 backup_dir=/var/lib/nethserver/backup/mysql/
 
-
 status=$(/sbin/e-smith/config getprop mysqld status)
 if [ "$status" = "disabled" ]
 then
@@ -10,7 +9,18 @@ then
     exit 0
 fi
 
+/usr/bin/mysql -e "drop database mysql" 2> /dev/null
+
+# restore all dumps, no matter if mysql is alreay configured
 for db in $(ls $backup_dir/*.dump 2> /dev/null)
 do
     mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
 done
+
+mysqlPassFile=/root/.my.cnf
+
+# restore grants including root password
+/usr/bin/mysql_upgrade >/dev/null
+sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /etc/my.pwd
+# re-expand /root/.my.cnf
+/sbin/e-smith/expand-template /root/.my.cnf

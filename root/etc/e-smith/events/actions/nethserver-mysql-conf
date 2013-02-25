@@ -32,6 +32,7 @@ NethServer::Service::manage_add('nethserver-mysql', 'mysqld');
 my $command = "/usr/bin/mysql_secure_installation";
 my $timeout = 5;
 my $passwd_file = "/etc/my.pwd";
+my $backup_dir="/var/lib/nethserver/backup/mysql/";
 my $password = esmith::util::genRandomPassword($passwd_file);
 
 if ( -f "/var/lib/mysql/mysql/user.frm" ) {
@@ -44,46 +45,52 @@ if ( $running != 1 ) {
     system("/sbin/service mysqld start");
 }
 
-my $exp = new Expect;
-$exp->raw_pty(1);  
-$exp->spawn($command)
-    or die "Cannot spawn $command: $!\n";
+# load existing dumps 
+if ( -f "$backup_dir/mysql.dump" ) {
+    system("/etc/e-smith/events/actions/mysql-load-tables");
+} else { # or initialize the server
+    my $exp = new Expect;
+    $exp->raw_pty(1);  
+    $exp->spawn($command) or die "Cannot spawn $command: $!\n";
 
-$exp->expect($timeout,
-    [ qr/Enter current password for root \(enter for none\):\s*/ => sub { my $exp = shift;
+    $exp->expect($timeout,
+        [ qr/Enter current password for root \(enter for none\):\s*/ => sub { my $exp = shift;
                           $exp->send("\n");
                           exp_continue; } ],
 
-    [ qr/Set root password\?/ => sub { my $exp = shift;
+        [ qr/Set root password\?/ => sub { my $exp = shift;
                           $exp->send("y\n");
                           exp_continue; } ],
 
-    [ qr/New password:/ => sub { my $exp = shift;
+        [ qr/New password:/ => sub { my $exp = shift;
                           $exp->send("$password\n");
                           exp_continue; } ],
 
-    [ qr/Re-enter new password:/ => sub { my $exp = shift;
+        [ qr/Re-enter new password:/ => sub { my $exp = shift;
                           $exp->send("$password\n");
                           exp_continue; } ],
 
-    [ qr/Remove anonymous users\?/ => sub { my $exp = shift;
+        [ qr/Remove anonymous users\?/ => sub { my $exp = shift;
                           $exp->send("y\n");
                           exp_continue; } ],
 
-    [ qr/Disallow root login remotely\?/ => sub { my $exp = shift;
+        [ qr/Disallow root login remotely\?/ => sub { my $exp = shift;
                           $exp->send("y\n");
                           exp_continue; } ],
-    [ qr/Remove test database and access to it\?/ => sub { my $exp = shift;
-                          $exp->send("y\n");
-                          exp_continue; } ],
-
-    [ qr/Reload privilege tables now\?/ => sub { my $exp = shift;
+        [ qr/Remove test database and access to it\?/ => sub { my $exp = shift;
                           $exp->send("y\n");
                           exp_continue; } ],
 
-);
+        [ qr/Reload privilege tables now\?/ => sub { my $exp = shift;
+                          $exp->send("y\n");
+                          exp_continue; } ],
 
-$exp->soft_close();
+    );
+
+    $exp->soft_close();
+}
+
+
 
 # stop mysql if not previous running
 if ( $running != 1 ) {
