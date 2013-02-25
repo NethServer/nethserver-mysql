@@ -1,6 +1,6 @@
 #!/bin/sh
 
-backup_dir=/var/nethserver/backup/mysql/
+backup_dir=/var/lib/nethserver/backup/mysql/
 if [ ! -d $backup_dir ]; then
     mkdir -p $backup_dir
 fi
@@ -11,7 +11,7 @@ then
     echo "mysqld is disabled - no tables dumped" >&2
     exit 0
 fi
-for db in $(mysql -BNre "show databases;")
+for db in $(mysql -BNre "show databases" | grep -v information_schema)
 do
     mysqldump --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
 done

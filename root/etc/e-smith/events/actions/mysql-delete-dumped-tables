@@ -1,5 +1,5 @@
 #!/bin/sh
 
-backup_dir=/var/nethserver/backup/mysql/
+backup_dir=/var/lib/nethserver/backup/mysql/
 
 exec /bin/rm -f $backup_dir/*.dump

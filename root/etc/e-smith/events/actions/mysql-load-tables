@@ -1,6 +1,6 @@
 #!/bin/sh
 
-backup_dir=/var/nethserver/backup/mysql/
+backup_dir=/var/lib/nethserver/backup/mysql/
 
 
 status=$(/sbin/e-smith/config getprop mysqld status)
