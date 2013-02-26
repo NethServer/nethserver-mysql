@@ -9,18 +9,27 @@ then
     exit 0
 fi
 
-/usr/bin/mysql -e "drop database mysql" 2> /dev/null
+# empty current client configuration
+> /root/.my.cnf
 
-# restore all dumps, no matter if mysql is alreay configured
+# restore old mysql db
+/usr/bin/mysql -e "drop database mysql" 2> /dev/null
+/usr/bin/mysql < $backup_dir/mysql.dump
+rm -f $backup_dir/mysql.dump
+
+# replace old password
+/usr/bin/mysqladmin password `cat /etc/my.pwd`
+
+# re-expand /root/.my.cnf
+/sbin/e-smith/expand-template /root/.my.cnf
+
+# update privileges tables (if needed)
+/usr/bin/mysql_upgrade >/dev/null
+
+# restore all dumps
 for db in $(ls $backup_dir/*.dump 2> /dev/null)
 do
     mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
 done
 
-mysqlPassFile=/root/.my.cnf
-
-# restore grants including root password
-/usr/bin/mysql_upgrade >/dev/null
-sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /etc/my.pwd
-# re-expand /root/.my.cnf
-/sbin/e-smith/expand-template /root/.my.cnf
+/etc/init.d/mysql.init start
