@@ -22,6 +22,7 @@
 
 event=$1
 sourceDir=$2
+dbFile="/home/e-smith/db/configuration"
 mysqlDumpDir='/home/e-smith/db/mysql'
 mysqlPassFile='/root/.my.cnf'
 
@@ -55,7 +56,7 @@ fi
 # restore all dumps, no matter if mysql is alreay configured
 for db in $(ls $mysqlDumpDir/*.dump 2> /dev/null)
 do
-    mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
+    /bin/cp $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
 done
 
 /etc/init.d/mysql.init start
@@ -64,4 +65,10 @@ done
 /usr/bin/mysql_upgrade >/dev/null
 sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /etc/my.pwd
 
-/sbin/e-smith/signal-event nethserver-mysql-save
+status=`/sbin/e-smith/db $sourceDir/$dbFile getprop mysqld status`
+/sbin/e-smith/config setprop mysqld status $status
+
+localNetworking=`/sbin/e-smith/db $sourceDir/$dbFile getprop mysqld LocalNetworkingOnly`
+/sbin/e-smith/config setprop mysqld LocalNetworkingOnly $localNetworking
+
+/sbin/e-smith/signal-event nethserver-mysql-update
