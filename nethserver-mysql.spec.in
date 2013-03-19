@@ -48,6 +48,10 @@ event_queue add %{name}-update
 %defattr(-,root,root)
 
 %changelog
+* Tue Mar 19 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.1-1
+- Add backup configuration
+- Add migration code
+
 * Fri Jan 18 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.0-1
 - First release
 
