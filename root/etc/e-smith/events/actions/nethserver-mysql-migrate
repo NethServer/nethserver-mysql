@@ -40,8 +40,12 @@ fi
 
 mysqlPassFile="$sourceDir/$mysqlPassFile"
 if [ ! -f "$mysqlPassFile" ]; then
-    echo "Could not find MySQL password file: $mysqlPassFile";
-    exit 1
+    #check if password file is already migrated
+    mysqlPassFile='/root/.my.cnf'
+    if [ ! -f "$mysqlPassFile" ]; then
+        echo "Could not find MySQL password file: $mysqlPassFile";
+        exit 1
+    fi
 fi
 
 status=$(/sbin/e-smith/config getprop mysqld status)
