@@ -24,9 +24,6 @@ use NethServer::Service;
 use esmith::util;
 use Expect;
 
-NethServer::Service::manage_add('nethserver-mysql', 'mysqld');
-
-
 # initialize mysql installation
 
 my $command = "/usr/bin/mysql_secure_installation";

@@ -10,9 +10,7 @@ my $event = "nethserver-mysql-update";
 
 event_actions($event,
               'initialize-default-databases' => '00',
-              'nethserver-mysql-conf' => '02',
-              'firewall-adjust' => '30',
-              'runlevel-adjust' => '40');
+              'nethserver-mysql-conf' => '02');
 templates2events("/etc/my.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
 event_services($event, 'mysqld' => 'restart');
@@ -27,18 +25,6 @@ $event = "nethserver-mysql-save";
 templates2events("/etc/my.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
 event_services($event, 'mysqld' => 'restart');
-
-
-#--------------------------------------------------
-# actions for nethserver-mysql-uninstall event
-#--------------------------------------------------
-
-$event = "nethserver-mysql-uninstall";
-
-event_actions($event,
-              'nethserver-mysql-uninstall' => '02',
-              'firewall-adjust' => '40',
-              'runlevel-adjust' => '50');
 
 
 #--------------------------------------------------

@@ -36,12 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %preun
-source /etc/nethserver/rpm_hook_functions
-signal_event  %{name}-uninstall $1
 
 %post
-source /etc/nethserver/rpm_hook_functions
-event_queue add %{name}-update
 
 
 %files -f %{name}-%{version}-filelist
