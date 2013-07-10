@@ -56,7 +56,7 @@ event_actions($event, 'mysql-delete-dumped-tables' => 50);
 
 $event = "post-restore-data";
 event_actions($event, 
-                     'mysql-load-tables' => 50,
+                     'mysql-load-tables' => '02',
                      'mysql-delete-dumped-tables' => 60);
 templates2events("/etc/my.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);

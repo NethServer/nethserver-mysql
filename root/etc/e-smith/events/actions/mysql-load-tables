@@ -1,26 +1,50 @@
 #!/bin/sh
+# This script will restore mysql backup.
+# The script mut be executed before /etc/.my.cnf is replaced by an expand-template
 
 backup_dir=/var/lib/nethserver/backup/mysql/
 
-status=$(/sbin/e-smith/config getprop mysqld status)
-if [ "$status" = "disabled" ]
-then
-    echo "mysqld is disabled - no tables restored" >&2
+if [ ! -f $backup_dir/mysql.dump ]; then
     exit 0
 fi
 
-# empty current client configuration
-> /root/.my.cnf
+echo "Restoring mysql backup...";
+/sbin/service mysqld status  >/dev/null
+if [ $? -eq 0 ]; then
+    /sbin/service mysqld stop >/dev/null
+fi
 
-# restore old mysql db
-/usr/bin/mysql -e "drop database mysql" 2> /dev/null
+# Restarting mysql without privileges
+/usr/bin/mysqld_safe --skip-grant-tables&
+/usr/bin/mysql -e 'show databases'&> /dev/null
+while [ $? -ne 0 ]  # wait mysql to start
+do
+    sleep 1
+    /usr/bin/mysql -e 'show databases'&> /dev/null
+done
+
+
+# drop mysql db if exists (backup restored after nethserver-mysql install)
+/usr/bin/mysql -e "drop database mysql" 2>/dev/null
 /usr/bin/mysql < $backup_dir/mysql.dump
+if [ $? -ne 0 ]; then
+    echo "Can't load mysql.dump backup"
+    exit 1
+fi
+
 rm -f $backup_dir/mysql.dump
 
-# replace old password
-/usr/bin/mysqladmin password `cat /etc/my.pwd`
+# restart mysqld as normal daemon
+/sbin/service mysqld restart
 
-# re-expand /root/.my.cnf
+# set new password accessing with the old one
+/usr/bin/mysqladmin password `cat /etc/my.pwd`
+if [ $? -ne 0 ]; then
+    echo "Can't change root password"
+    exit 1
+fi
+
+# update .my.cnf with new password
 /sbin/e-smith/expand-template /root/.my.cnf
 
 # update privileges tables (if needed)
