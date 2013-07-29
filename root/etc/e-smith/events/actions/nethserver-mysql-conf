@@ -42,7 +42,7 @@ if ( -f "/var/lib/mysql/mysql/user.frm" ) {
 if ( -f "$backup_dir/mysql.dump" ) {
     system("/etc/e-smith/events/actions/mysql-load-tables");
 } else { # or initialize the server
-    if ( system("/sbin/service mysqld status >/dev/null") == 0 ) {
+    if ( system("/sbin/service mysqld status >/dev/null") != 0 ) {
         system("/sbin/service mysqld start");
     }
     my $exp = new Expect;
