@@ -56,4 +56,4 @@ do
     mv $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
 done
 
-/etc/init.d/mysql.init start
+exec /etc/e-smith/events/actions/nethserver-mysql-init

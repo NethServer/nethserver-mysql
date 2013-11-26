@@ -59,7 +59,7 @@ do
     /bin/cp $db /etc/e-smith/sql/init/01_$(basename $db .dump).sql
 done
 
-/etc/init.d/mysql.init start
+/etc/e-smith/events/actions/nethserver-mysql-init
 
 # restore grants including root password
 /usr/bin/mysql_upgrade >/dev/null
