@@ -23,6 +23,8 @@
 
 . /etc/rc.d/init.d/functions
 
+spool_dir=/var/spool/nethserver-mysql-init
+
 for i in $(seq 1 10)
 do
     if test -e /var/lib/mysql/mysql.sock
@@ -30,7 +32,7 @@ do
 	exit_value=0
 	HOME=/root
 	export HOME
-	for link in $(find /etc/e-smith/sql/init -type f -o -type l | sort)
+	for link in $(find ${spool_dir} -type f -o -type l | sort)
 	do
 	    F=$(basename $link | sed 's/S\?[0-9][0-9]_\?//')
 	    case $F in

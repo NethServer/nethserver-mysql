@@ -21,7 +21,6 @@ mysql.
 %setup
 
 %build
-mkdir -p root/etc/e-smith/sql/init
 perl createlinks
 
 %install
