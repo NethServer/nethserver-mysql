@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Wed Dec 18 2013 Davide Principi <davide.principi@nethesis.it> - 1.0.5-1.ns6
+- Service mysql.init does not support chkconfig - Bug #2350 [NethServer]
+
 * Mon Jul 29 2013 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.4-1.ns6
 - Remove unused Runlevels prop  #2067
 - Correctly start mysqld on first install  #2043
