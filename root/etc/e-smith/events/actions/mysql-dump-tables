@@ -13,5 +13,5 @@ then
 fi
 for db in $(mysql -BNre "show databases" | grep -v information_schema)
 do
-    mysqldump --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
+    mysqldump --single-transaction --quick --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
 done
