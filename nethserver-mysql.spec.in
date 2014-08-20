@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Wed Aug 20 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.6-1.ns6
+- Backup: pre-backup-data event fails if mysqldump can't acquire lock - Bug #2791 [NethServer]
+
 * Wed Dec 18 2013 Davide Principi <davide.principi@nethesis.it> - 1.0.5-1.ns6
 - Service mysql.init does not support chkconfig - Bug #2350 [NethServer]
 
