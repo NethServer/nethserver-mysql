@@ -11,7 +11,10 @@ then
     echo "mysqld is disabled - no tables dumped" >&2
     exit 0
 fi
-for db in $(mysql -BNre "show databases" | grep -v information_schema)
+dbs=`mysql -BNre "show databases"` || exit 1
+for db in $(echo $dbs)
 do
-    mysqldump --single-transaction --quick --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
+    if [ "$db" != "information_schema" ]; then
+        mysqldump --skip-dump-date --ignore-table=mysql.event --single-transaction --quick --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
+    fi
 done
