@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Wed Oct 22 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.7-1.ns6
+- MySQL backup doesn't fail if root password is not set - Bug #2906 [NethServer]
+
 * Wed Aug 20 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.6-1.ns6
 - Backup: pre-backup-data event fails if mysqldump can't acquire lock - Bug #2791 [NethServer]
 
