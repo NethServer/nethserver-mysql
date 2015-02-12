@@ -1,7 +1,7 @@
 Summary: NethServer MySQL configuration and templates.
 Name: nethserver-mysql
-Version: @@VERSION@@
-Release: @@RELEASE@@
+Version: 1.0.7
+Release: 1
 License: GPL
 Group: Networking/Daemons
 Source: %{name}-%{version}.tar.gz
