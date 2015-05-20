@@ -5,7 +5,7 @@ Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Requires: mysql-server, perl-Expect
+Requires: mariadb-server, perl-Expect
 Requires: nethserver-base
 Requires: nethserver-lib
 BuildRequires: nethserver-devtools
