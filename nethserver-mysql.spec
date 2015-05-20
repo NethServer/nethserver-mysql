@@ -3,15 +3,12 @@ Name: nethserver-mysql
 Version: 1.0.7
 Release: 1%{?dist}
 License: GPL
-Group: Networking/Daemons
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Requires: mysql-server, perl-Expect
 Requires: nethserver-base
-Requires: nethserver-lib >= 1.0.1
+Requires: nethserver-lib
 BuildRequires: nethserver-devtools
-AutoReq: no
-
 
 %description
 This package adds necessary startup and configuration items for
@@ -25,23 +22,14 @@ mkdir -p root/etc/e-smith/sql/init
 perl createlinks
 
 %install
-rm -rf $RPM_BUILD_ROOT
-(cd root   ; find . -depth -print | cpio -dump $RPM_BUILD_ROOT)
-/sbin/e-smith/genfilelist $RPM_BUILD_ROOT \
-    > %{name}-%{version}-filelist
-echo "%doc COPYING"          >> %{name}-%{version}-filelist
-
-%clean 
-rm -rf $RPM_BUILD_ROOT
-
-
-%preun
-
-%post
-
+rm -rf %{buildroot}
+(cd root   ; find . -depth -print | cpio -dump %{buildroot})
+%{genfilelist} %{buildroot} > %{name}-%{version}-filelist
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
+%doc COPYING
+%dir %{_nseventsdir}/%{name}-update
 
 %changelog
 * Wed Oct 22 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.7-1.ns6
