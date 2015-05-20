@@ -7,7 +7,6 @@ Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Requires: mariadb-server, perl-Expect
 Requires: nethserver-base
-Requires: nethserver-lib
 BuildRequires: nethserver-devtools
 
 %description
