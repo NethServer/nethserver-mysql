@@ -8,6 +8,7 @@ BuildArch: noarch
 Requires: mariadb-server, perl-Expect
 Requires: nethserver-base
 BuildRequires: nethserver-devtools
+URL: %{url_prefix}/%{name}
 
 %description
 This package adds necessary startup and configuration items for
