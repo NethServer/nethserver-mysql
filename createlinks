@@ -11,7 +11,7 @@ my $event = "nethserver-mysql-update";
 event_actions($event,
               'initialize-default-databases' => '00',
               'nethserver-mysql-conf' => '02');
-templates2events("/etc/my.cnf",  $event);
+templates2events("/etc/my.cnf.d/nethserver.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
 event_services($event, 'mysqld' => 'restart');
 
@@ -22,7 +22,7 @@ event_services($event, 'mysqld' => 'restart');
 
 $event = "nethserver-mysql-save";
 
-templates2events("/etc/my.cnf",  $event);
+templates2events("/etc/my.cnf.d/nethserver.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
 event_services($event, 'mysqld' => 'restart');
 
@@ -58,7 +58,7 @@ $event = "post-restore-data";
 event_actions($event, 
                      'mysql-load-tables' => '02',
                      'mysql-delete-dumped-tables' => 60);
-templates2events("/etc/my.cnf",  $event);
+templates2events("/etc/my.cnf.d/nethserver.cnf",  $event);
 templates2events("/root/.my.cnf",  $event);
 event_services($event, 'mysqld' => 'restart');
 
