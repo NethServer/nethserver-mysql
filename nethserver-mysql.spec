@@ -7,7 +7,14 @@ Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Requires: mariadb-server, perl-Expect
 Requires: nethserver-base
+
+BuildRequires: systemd
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+
 BuildRequires: nethserver-devtools
+
 URL: %{url_prefix}/%{name}
 
 %description
@@ -30,6 +37,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYING
 %dir %{_nseventsdir}/%{name}-update
+
+%post
+%systemd_post mysqld.service
+
+%preun
+%systemd_preun mysqld.service
+
+%postun
+%systemd_postun
 
 %changelog
 * Wed Oct 22 2014 Davide Principi <davide.principi@nethesis.it> - 1.0.7-1.ns6
