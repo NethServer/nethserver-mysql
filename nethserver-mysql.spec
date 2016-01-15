@@ -37,6 +37,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc COPYING
 %dir %{_nseventsdir}/%{name}-update
+%attr(0644,root,root) %ghost %{_sysconfdir}/my.cnf.d/nethserver.cnf
 
 %post
 %systemd_post mysqld.service
