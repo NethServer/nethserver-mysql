@@ -21,16 +21,15 @@
 
 use strict;
 use NethServer::Service;
-use esmith::util;
+use NethServer::Password;
 use Expect;
 
 # initialize mysql installation
 
 my $command = "/usr/bin/mysql_secure_installation";
 my $timeout = 5;
-my $passwd_file = "/etc/my.pwd";
 my $backup_dir="/var/lib/nethserver/backup/mysql/";
-my $password = esmith::util::genRandomPassword($passwd_file);
+my $password = NethServer::Password::store('mysql');
 
 if ( -f "/var/lib/mysql/mysql/user.frm" ) {
    exit(0);

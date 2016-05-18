@@ -5,6 +5,7 @@
     #----------------------------------------------------------
 
     use esmith::util;
-    my $pw = esmith::util::genRandomPassword('/etc/my.pwd');
+    use NethServer::Password;
+    my $pw = NethServer::Password::store('mysql');
     $OUT .= "password=$pw";
 }

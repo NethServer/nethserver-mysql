@@ -63,7 +63,7 @@ done
 
 # restore grants including root password
 /usr/bin/mysql_upgrade >/dev/null
-sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /etc/my.pwd
+sed -n 's/.*password *= *\([^ ]*.*\)/\1/p' $mysqlPassFile > /var/lib/nethserver/secrets/mysql
 
 status=`/sbin/e-smith/db $sourceDir/$dbFile getprop mysqld status`
 /sbin/e-smith/config setprop mysqld status $status

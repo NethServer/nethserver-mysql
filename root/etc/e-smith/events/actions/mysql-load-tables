@@ -38,7 +38,7 @@ rm -f $backup_dir/mysql.dump
 /sbin/service mysqld restart
 
 # set new password accessing with the old one
-/usr/bin/mysqladmin password `cat /etc/my.pwd`
+/usr/bin/mysqladmin password `cat /var/lib/nethserver/secrets/mysql`
 if [ $? -ne 0 ]; then
     echo "Can't change root password"
     exit 1
