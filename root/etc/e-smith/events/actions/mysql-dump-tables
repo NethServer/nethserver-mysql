@@ -14,7 +14,7 @@ fi
 dbs=`mysql -BNre "show databases"` || exit 1
 for db in $(echo $dbs)
 do
-    if [ "$db" != "information_schema" ]; then
+    if [ "$db" != "information_schema" ] && [ "$db" != "performance_schema" ]; then
         mysqldump --skip-dump-date --ignore-table=mysql.event --single-transaction --quick --add-drop-table -QB "$db" -r $backup_dir/"$db".dump || exit 1
     fi
 done
