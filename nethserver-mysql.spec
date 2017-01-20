@@ -1,6 +1,6 @@
 Summary: NethServer MySQL configuration and templates.
 Name: nethserver-mysql
-Version: 1.1.0
+Version: 1.1.1
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %systemd_postun
 
 %changelog
+* Fri Jan 20 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.1-1
+- restore-data: mysql - Can't change root password - Bug NethServer/dev#5197
+
 * Thu Jul 07 2016 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.0-1
 - First NS7 release
 
