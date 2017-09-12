@@ -54,11 +54,6 @@ fi
 
 rm -f $backup_dir/mysql.dump
 
-# Restore mariadb root password
-if [ -f /var/lib/nethserver/backup/mysql/mysql ]; then
-    /usr/bin/cp -p /var/lib/nethserver/backup/mysql/mysql /var/lib/nethserver/secrets/
-fi
-
 newpass=$(cat /var/lib/nethserver/secrets/mysql)
 /usr/bin/mysql mysql -u root -e "update user set password=PASSWORD(\"$newpass\") where User='root'; flush privileges;"
 
