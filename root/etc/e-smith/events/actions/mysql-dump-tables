@@ -5,11 +5,6 @@ if [ ! -d $backup_dir ]; then
     mkdir -p $backup_dir
 fi
 
-# Backup mariadb root password
-if [ -f /var/lib/nethserver/secrets/mysql ]; then
-    /usr/bin/cp -p /var/lib/nethserver/secrets/mysql /var/lib/nethserver/backup/mysql/
-fi
-
 status=$(/sbin/e-smith/config getprop mysqld status)
 if [ "$status" = "disabled" ]
 then
