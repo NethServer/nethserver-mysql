@@ -1,6 +1,6 @@
 Summary: NethServer MySQL configuration and templates.
 Name: nethserver-mysql
-Version: 1.1.1
+Version: 1.1.2
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %systemd_postun
 
 %changelog
+* Wed Sep 13 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.2-1
+- MariaDB (MySQL): do not restore root password within configuration backup - Bug NethServer/dev#5339
+
 * Fri Jan 20 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.1-1
 - restore-data: mysql - Can't change root password - Bug NethServer/dev#5197
 
