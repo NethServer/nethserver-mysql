@@ -58,7 +58,8 @@ newpass=$(cat /var/lib/nethserver/secrets/mysql)
 /usr/bin/mysql mysql -u root -e "update user set password=PASSWORD(\"$newpass\") where User='root'; flush privileges;"
 
 # Stop all mysql instances
-/usr/bin/mysqladmin shutdown
+/usr/bin/mysqladmin shutdown --shutdown_timeout=5
+sleep 1
 
 # restart mysqld as normal daemon
 /usr/bin/systemctl restart mysqld
