@@ -1,0 +1,9 @@
+.include mariadb.service
+
+[Unit]
+Description=MariaDB database server (recover root password)
+Conflicts=mysqld.service
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/mysqld_safe --basedir=/usr --skip-grant-tables
