@@ -3,6 +3,7 @@
 [Unit]
 Description=MariaDB database server (recover root password)
 Conflicts=mysqld.service
+After=mysqld.service
 
 [Service]
 ExecStart=
