@@ -28,21 +28,8 @@ if [ ! -f $backup_dir/mysql.dump ]; then
     exit 0
 fi
 
-echo "Restoring mariadb backup...";
-/usr/bin/systemctl status mysqld  >/dev/null
-if [ $? -eq 0 ]; then
-    /usr/bin/systemctl stop mysqld >/dev/null
-fi
-
-# Restarting mysql without privileges
-/usr/bin/mysqld_safe --skip-grant-tables&
-/usr/bin/mysql -e 'show databases'&> /dev/null
-while [ $? -ne 0 ]  # wait mysql to start
-do
-    sleep 1
-    /usr/bin/mysql -e 'show databases'&> /dev/null
-done
-
+echo "[NOTICE] Restoring mariadb backup...";
+systemctl start mysqld_recover.service
 
 # drop mysql db if exists (backup restored after nethserver-mysql install)
 /usr/bin/mysql -e "drop database mysql" 2>/dev/null
@@ -57,12 +44,8 @@ rm -f $backup_dir/mysql.dump
 newpass=$(cat /var/lib/nethserver/secrets/mysql)
 /usr/bin/mysql mysql -u root -e "update user set password=PASSWORD(\"$newpass\") where User='root'; flush privileges;"
 
-# Stop all mysql instances
-/usr/bin/mysqladmin shutdown --shutdown_timeout=5
-sleep 1
-
 # restart mysqld as normal daemon
-/usr/bin/systemctl restart mysqld
+systemctl start mysqld.service
 
 # update .my.cnf with new password
 /sbin/e-smith/expand-template /root/.my.cnf

@@ -21,7 +21,6 @@
 # Please visit our web site www.mitel.com/sme/ for details.
 #----------------------------------------------------------------------
 
-# chkconfig: - 65 35
 # description: Run database initialization scripts
 
 
