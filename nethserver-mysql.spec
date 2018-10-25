@@ -1,6 +1,6 @@
 Summary: NethServer MySQL configuration and templates.
 Name: nethserver-mysql
-Version: 1.1.3
+Version: 1.1.4
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %systemd_postun
 
 %changelog
+* Thu Oct 25 2018 Davide Principi <davide.principi@nethesis.it> - 1.1.4-1
+- Live upgrade procedure - NethServer/dev#5564
+
 * Fri Oct 06 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.1.3-1
 - Use mysqld_safe for stopping mariadb instances
 
