@@ -21,8 +21,9 @@
 #
 
 if [[ ! -f /var/lib/mysql/mysql/user.frm ]]; then 
-   # mysql is not configured, nothing to do
-   exit 0
+   # mysql is not configured do it now!
+   echo "[NOTICE] starting mysql initial configuration"
+   exec /etc/e-smith/events/actions/nethserver-mysql-conf
 fi
 
 echo "[NOTICE] restoring mysql root password"
