@@ -1,6 +1,6 @@
 Summary: NethServer MySQL configuration and templates.
 Name: nethserver-mysql
-Version: 1.1.4
+Version: 1.1.5
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %systemd_postun
 
 %changelog
+* Tue Oct 20 2020 Davide Principi <davide.principi@nethesis.it> - 1.1.5-1
+- NethVoice restore config fails in new systems - Bug nethesis/dev#5885
+
 * Thu Oct 25 2018 Davide Principi <davide.principi@nethesis.it> - 1.1.4-1
 - Live upgrade procedure - NethServer/dev#5564
 
